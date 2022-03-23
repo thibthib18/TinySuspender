@@ -26,6 +26,30 @@ if (!pageUrl) {
 }
 // end compatibility section
 
+document.addEventListener("keypress", function (event) {
+  var nextPrevTab = function (dir) {
+    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+      var i = 0;
+      while (!tabs[i].active) {
+        i++;
+      }
+      chrome.tabs.update(tabs[(i + tabs.length + dir) % tabs.length].id, {
+        active: true,
+      });
+    });
+  };
+
+  if (event.shiftKey === true) {
+    switch (event.key) {
+      case "J":
+        nextPrevTab(-1);
+        break;
+      case "K":
+        nextPrevTab(1);
+        break;
+    }
+  }
+});
 
 document.onclick = () => {
     this.chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
